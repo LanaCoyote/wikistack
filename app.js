@@ -12,6 +12,7 @@ app.set( 'view engine', 'html' ); //
 app.set( 'views', __dirname + '/views' );
 
 swig.setDefaults( { cache: false } );
+require('./filters')( swig );
 
 // log request
 app.use('/', function( req, res, next ) {

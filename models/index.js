@@ -26,7 +26,8 @@ var pageSchema = new mongoose.Schema( {
   content: {type: String, required: true },
   date: {type: Date, default: Date.now},
   status: {type: String, enum: ['open','closed']},
-  author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
+  author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  tags: {type: [String], default: function() { return [] }}
 } );
 
 pageSchema.pre('validate', function(next) {
@@ -38,6 +39,22 @@ pageSchema.pre('validate', function(next) {
 pageSchema.virtual( 'route' ).get( function() {
   return '/wiki/' + this.urlTitle;
 } );
+
+pageSchema.virtual( 'findSimilar' ).get( function() {
+  return (function( cb ) {
+    return Page.find({
+      tags: {$in: this.tags},
+      _id: {$ne: this._id}
+    }, cb);
+  }).bind( this );
+} );
+
+// findByTag searches for pages by tag
+pageSchema.statics.findByTag = function( tags, cb ) {
+  return this.find({
+    tags: {$in: tags}
+  }).exec( cb );
+}
 
 // create objects
 var Page = mongoose.model('Page', pageSchema);

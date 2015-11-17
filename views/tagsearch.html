@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h3>Tag Search</h3>
+  <hr>
+  <div class="container">
+    <form method="GET" action="/search/">
+    
+    <div class='form-group'>
+      <label for='search' class='col-sm-2 control-label'>Search for:</label>
+      <div class='col-sm-10'>
+        <input name='search' type='text' class='form-control' value='{{ search }}' />
+      </div>
+    </div>
+
+    </form>
+  </div>
+  {% if pages %}
+  <div>
+    <hr>
+    <h4>Found {{ pages.length }} result(s):</h4>
+    <ul>
+    {% for page in pages %}
+      <li>{{ page | pageLink }}</li>
+    {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+{% endblock %}
