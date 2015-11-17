@@ -15,26 +15,10 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   // Find the author
-  User.findOne({
+  User.findOrCreate({
     name: req.body['author-name'],
     email: req.body['author-email']
   })
-
-  // If they don't exist, create them
-  .then(function resolve(user) {
-    if (user !== null)
-      return user;
-    else {
-      var newUser = new User({
-        name: req.body['author-name'],
-        email: req.body['author-email']
-      });
-      return newUser.save();
-    }
-  }, function error(err) {
-    res.render( 'error', { message: "Could not connect to Database", error: err } );
-  })
-
   // Create the page based on that user
   .then(function resolve(user) {
     console.dir( user );
@@ -86,7 +70,7 @@ router.get('/:pageTitle/similar', function( req, res, next ) {
   }).then( function resolve( pages ) {
     res.render( 'index', { pages:pages } );
   }, function error( err ) {
-    
+
   });
 });
 

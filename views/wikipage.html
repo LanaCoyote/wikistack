@@ -2,7 +2,7 @@
 
 {% block content %}
   <h3>{{page.title}}<small> (<a href="{{page.urlTitle}}/similar">Similar</a>)</small></h3>
-  <h4>by <a href="PLACEHOLDER-AUTHOR-URL">{{page.author.name}}</a></h4>
+  <h4>by {{page.author | userLink}}</h4>
   <ul class="list-inline">
   {% for tag in page.tags %}
     <li><a href="/search/?search={{ tag }}">{{ tag }}</a></li>

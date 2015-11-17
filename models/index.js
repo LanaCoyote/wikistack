@@ -19,6 +19,24 @@ var userSchema = new mongoose.Schema( {
   email: {type: String, required: true, unique: true }
 } );
 
+userSchema.statics.findOrCreate = function(params, cb) {
+  return User.findOne(params).exec()
+  .then(function resolve(user) {
+    if (user !== null)
+      return cb ? cb(null, user) : user;
+    else {
+      var prom = new User(params).save();
+      if (cb) {
+        return prom.then(function resolve(user) {
+          return cb(null, user);
+        }, cb)
+      }
+      else
+        return prom;
+    }
+  }, cb)
+}
+
 // page schema
 var pageSchema = new mongoose.Schema( {
   title: {type: String, required: true },
