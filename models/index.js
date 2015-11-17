@@ -6,6 +6,13 @@ mongoose.connect( 'mongodb://localhost/wikistack' );
 var db = mongoose.connection;
 db.on( 'error', console.error.bind( console, chalk.red( "!! MONGO ERROR::" ) ) );
 
+// helpers
+function titleToUrl(title) {
+  title = title.replace(/\s/g, '_'); // replace whitespace with '-'
+  title = title.replace(/\W/g, ''); // replace nonalpha chars with ''
+  return title;
+}
+
 // user schema
 var userSchema = new mongoose.Schema( {
   name: {type: String, required: true, unique: true },
@@ -21,6 +28,11 @@ var pageSchema = new mongoose.Schema( {
   status: {type: String, enum: ['open','closed']},
   author: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 } );
+
+pageSchema.pre('validate', function(next) {
+  this.urlTitle = titleToUrl(this.title);
+  next();
+});
 
 // route property on page resolves to /wiki/urlTitle
 pageSchema.virtual( 'route' ).get( function() {

@@ -1,14 +1,15 @@
 var bodyparser = require('body-parser');
 var chalk = require('chalk');
 var express = require('express');
+var router = require('./routes')
 var swig = require('swig');
 
 var app = express();
 
 // app config
 app.engine( 'html', swig.renderFile );
-app.set( 'view engine', 'html' );
-app.set( 'views', process.cwd() + '/views' );
+app.set( 'view engine', 'html' ); //
+app.set( 'views', __dirname + '/views' );
 
 swig.setDefaults( { cache: false } );
 
@@ -24,6 +25,8 @@ app.use('/', function( req, res, next ) {
 app.use(bodyparser.urlencoded( { extended: false } ));
 app.use(bodyparser.json());
 app.use('/static', express.static( __dirname + '/public') );
+
+app.use('/', router);
 
 // start server
 var server = app.listen( 3000, function() {
