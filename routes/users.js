@@ -19,7 +19,7 @@ router.get('/:userId', function(req, res, next) {
 
   Promise.all(pArray)
   .then(function resolve(vArray) {
-    res.render('userPage', {
+    res.render('userpage', {
       user: vArray[0],
       pages: vArray[1]
     });

@@ -16,8 +16,9 @@ require('./filters')( swig );
 
 // log request
 app.use('/', function( req, res, next ) {
+  var origpath = req.path;
   res.on('finish', function() {
-    console.log( chalk.green( req.method ), req.path, chalk.yellow( res.statusCode ) );
+    console.log( chalk.green( req.method ), origpath, chalk.yellow( res.statusCode ) );
   } );
   next();
 } );
